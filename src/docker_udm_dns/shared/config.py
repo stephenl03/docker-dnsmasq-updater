@@ -38,6 +38,8 @@ class ConfigHandler():
             'api_port': '8080',
             'api_key': '',
             'api_backend': None,
+            'udm_api_address': '',
+            'udm_api_key': '',
             'log_level': self.log_level,
             'delay': 10,
             'local_write_delay': 3,
