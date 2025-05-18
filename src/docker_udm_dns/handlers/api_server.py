@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from bottle import Bottle, request, response  # type: ignore[import-untyped, import-not-found]
 
 from docker_udm_dns.shared.logging import get_logger
+from docker_udm_dns.handlers.signal import SignalHandler
 
 class APIServerHandler(Bottle):
     """Run the API server."""
@@ -29,7 +30,7 @@ class APIServerHandler(Bottle):
 
         self.instance_id = hash(time.time())
 
-        signal_ready(self.ready_fd, self.logger)
+        SignalHandler().signal_ready(self.ready_fd, self.logger)
 
     def validation(self, auth, user):
         """Validate request."""

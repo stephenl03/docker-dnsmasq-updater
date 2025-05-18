@@ -1,8 +1,11 @@
+import signal
+
 import sys
 from types import SimpleNamespace
 
 import docker
 
+from docker_udm_dns.handlers.signal import SignalHandler
 from docker_udm_dns.shared.logging import get_logger
 
 class DockerHandler():
@@ -207,7 +210,7 @@ class DockerHandler():
             self.hosts_handler.queue_write()
 
         events = self.client.events(decode=True)
-        signal_ready(self.ready_fd, self.logger)
+        SignalHandler().signal_ready(self.ready_fd, self.logger)
 
         while True:
             for event in events:

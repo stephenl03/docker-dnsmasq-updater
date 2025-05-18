@@ -48,6 +48,7 @@ from docker_udm_dns.handlers.udm import UDMHandler
 from docker_udm_dns.handlers.hosts import HostsHandler
 from docker_udm_dns.handlers.api_server import APIServerHandler
 from docker_udm_dns.handlers.docker import DockerHandler
+from docker_udm_dns.handlers.signal import SignalHandler
 
 
 # config file and list of paths, in the order to try
@@ -96,28 +97,27 @@ BLOCK_END = '### docker dnsmasq updater end ###'
 #     return logger
 
 ## Signal stuff...
-def signal_handler(sig, _frame):
-    """Handle SIGINT cleanly."""
-    print('\nCaught signal:', sig, '\n')
-    sys.exit(0)
+# def signal_handler(sig, _frame):
+#     """Handle SIGINT cleanly."""
+#     print('\nCaught signal:', sig, '\n')
+#     sys.exit(0)
+
+# signal.signal(signal.SIGINT, signal_handler)
+# signal.signal(signal.SIGTERM, signal_handler)
 
 
-signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGTERM, signal_handler)
+# def signal_ready(ready_fd, logger):
+#     """Signal we're ready."""
+#     if ready_fd:
+#         logger.info('Initialization done. Signalling readiness.')
+#         logger.debug('Readiness signal writing to file descriptor %s.', ready_fd)
 
-
-def signal_ready(ready_fd, logger):
-    """Signal we're ready."""
-    if ready_fd:
-        logger.info('Initialization done. Signalling readiness.')
-        logger.debug('Readiness signal writing to file descriptor %s.', ready_fd)
-
-        try:
-            os.write(ready_fd, '\n'.encode())
-        except OSError:
-            logger.warning('Could not signal file descriptor \'%s\'.', ready_fd)
-    else:
-        logger.info('Initialization done.')
+#         try:
+#             os.write(ready_fd, '\n'.encode())
+#         except OSError:
+#             logger.warning('Could not signal file descriptor \'%s\'.', ready_fd)
+#     else:
+#         logger.info('Initialization done.')
 
 
 # class ResettableTimer():
@@ -1114,6 +1114,11 @@ def main():
     """Do all the things."""
     config = ConfigHandler()
     args = vars(config.get_args())
+
+    signal_handler = SignalHandler(**args)
+
+    signal.signal(signal.SIGINT, signal_handler.signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler.signal_handler)
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         if args['location'] == 'local':
