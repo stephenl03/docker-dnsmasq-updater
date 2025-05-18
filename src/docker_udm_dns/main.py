@@ -42,6 +42,12 @@ import cryptography.exceptions
 from docker_udm_dns.shared.config import ConfigHandler
 from docker_udm_dns.shared.logging import get_logger
 from docker_udm_dns.shared.resettable_timer import ResettableTimer
+from docker_udm_dns.handlers.local import LocalHandler
+from docker_udm_dns.handlers.remote import RemoteHandler
+from docker_udm_dns.handlers.udm import UDMHandler
+from docker_udm_dns.handlers.hosts import HostsHandler
+from docker_udm_dns.handlers.api_server import APIServerHandler
+from docker_udm_dns.handlers.docker import DockerHandler
 
 
 # config file and list of paths, in the order to try
@@ -1112,8 +1118,12 @@ def main():
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         if args['location'] == 'local':
             output_handler = LocalHandler(temp_file, **args)
-        else:
+        elif args['location'] == 'remote':
             output_handler = RemoteHandler(temp_file, **args)
+        elif args['location'] == 'udm':
+            output_handler = UDMHandler(temp_file, **args)
+        else:
+            raise ValueError("No location provided")
 
         hosts_handler = HostsHandler(output_handler, **args)
 
