@@ -14,7 +14,7 @@ class UDMHandler:
         self.temp_file = temp_file
         self.logger = get_logger(self.__class__.__name__, self.params.log_level)
         self.delayed_put = ResettableTimer(self.params.delay, self.put_hostfile)
-        self.udm_url = f"https://{self.params.udm_ip}/proxy/network/v2/api/site/default/static-dns"
+        self.udm_url = f"https://{self.params.udm_api_address}/proxy/network/v2/api/site/default/static-dns"
         self.headers = {
             "X-API-KEY": self.params.udm_api_key,
             "Accept": "application/json",
@@ -46,12 +46,12 @@ class UDMHandler:
             if existing_record:
                 payload.update(existing_record[0])
 
-                response = requests.post(self.udm_url, headers=self.headers, json=payload, verify=False)
-                if response.status_code == 200:
-                    self.logger.info("Successfully added A record: %s", record['key'])
-                else:
-                    self.logger.error("Failed to add A record: %s. Response: %s",
-                                      record['key'], response.text)
+            response = requests.post(self.udm_url, headers=self.headers, json=payload, verify=False)
+            if response.ok:
+                self.logger.info("Successfully added A record: %s", record['key'])
+            else:
+                self.logger.error("Failed to add A record: %s. Response: %s",
+                                    record['key'], response.text)
         except Exception as e:
             self.logger.error("Error updating UDM A records: %s", str(e))
 
