@@ -1,0 +1,28 @@
+[project]
+name = "docker-udm-dns"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Stephen",email = "stephenl@me.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "docker (>=7.1.0,<8.0.0)",
+    "bottle (>=0.13.3,<0.14.0)",
+    "bottlejwt (>=1.0.2,<2.0.0)",
+    "python-hosts (>=1.0.7,<2.0.0)",
+    "paramiko (>=3.5.1,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "docker_udm_dns", from = "src"}]
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

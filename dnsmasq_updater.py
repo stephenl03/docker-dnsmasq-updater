@@ -184,7 +184,7 @@ class UDMHandler:
                 "enabled": True
             }
             existing_record = if record["key"] == for record in dns_records:
-                
+
                 response = requests.post(self.udm_url, headers=self.headers, json=payload, verify=False)
                 if response.status_code == 200:
                     self.logger.info("Successfully added A record: %s", record['key'])
