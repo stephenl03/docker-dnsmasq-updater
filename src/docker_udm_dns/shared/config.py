@@ -213,6 +213,14 @@ class ConfigHandler():
             '--api_backend', action='store', metavar='STRING',
             help='API backend (refer to Bottle module docs for details)')
 
+        udm_group = parser.add_argument_group(
+            title='UDM server (needed by --udm)')
+        udm_group.add_argument(
+            '--udm_api_address', action='store', metavar='IP',
+            help='address for UDM device (default: \'%(default)s\')')
+        udm_group.add_argument(
+            '--udm_api_key', action='store', metavar='KEY', help='UDM API access key')
+
         self.args = parser.parse_args()
         self.logger.debug('Parsed command line:\n%s',
                           json.dumps(vars(self.args), indent=4))
@@ -260,12 +268,12 @@ class ConfigHandler():
                 sys.exit(1)
 
         if self.args.location == "udm":
-            if self.args.key == '':
-                self.logger.error('No key specified.')
+            if self.args.udm_api_address == '':
+                self.logger.error('No remote server specified.')
                 sys.exit(1)
 
-            if self.args.server == '':
-                self.logger.error('No remote server specified.')
+            if self.args.udm_api_key == '':
+                self.logger.error('No key specified.')
                 sys.exit(1)
 
         if self.args.mode == 'manager' and self.args.api_key == '':
