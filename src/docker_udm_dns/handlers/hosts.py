@@ -1,5 +1,8 @@
-from types import SimpleNamespace
+import re
 
+from types import SimpleNamespace
+from python_hosts import Hosts, HostsEntry
+from collections import defaultdict
 
 from docker_udm_dns.shared.logging import get_logger
 from docker_udm_dns.shared.resettable_timer import ResettableTimer
