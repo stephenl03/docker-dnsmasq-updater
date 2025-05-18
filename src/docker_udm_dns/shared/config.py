@@ -168,6 +168,9 @@ class ConfigHandler():
         location_group.add_argument(
             '--local', action='store_const', dest='location', const='local',
             help='write to a local hosts file')
+        location_group.add_argument(
+            '--udm', action='store_const', dest='location', const='udm',
+            help='write to a UDM device')
         hosts_group.add_argument(
             '-f', '--file', action='store', metavar='FILE',
             help='the hosts file (including path) to write')
@@ -227,11 +230,11 @@ class ConfigHandler():
             self.logger.error('Specified host IP (%s) is invalid.', self.args.ip)
             sys.exit(1)
 
-        if self.args.file == '':
+        if self.args.file == '' and not self.args.location == "udm":
             self.logger.error('No hosts file specified.')
             sys.exit(1)
 
-        if self.args.restart_cmd == '':
+        if self.args.restart_cmd == '' and not self.args.location == "udm":
             self.logger.error('No dnsmasq restart command specified.')
             sys.exit(1)
 
@@ -250,6 +253,15 @@ class ConfigHandler():
                     sys.exit(1)
             elif not os.path.exists(self.args.key):
                 self.logger.error('Key file (%s) does not exist.', self.args.key)
+                sys.exit(1)
+
+            if self.args.server == '':
+                self.logger.error('No remote server specified.')
+                sys.exit(1)
+
+        if self.args.location == "udm":
+            if self.args.key == '':
+                self.logger.error('No key specified.')
                 sys.exit(1)
 
             if self.args.server == '':
