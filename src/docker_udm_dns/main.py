@@ -102,6 +102,9 @@ BLOCK_END = '### docker dnsmasq updater end ###'
 #     print('\nCaught signal:', sig, '\n')
 #     sys.exit(0)
 
+signal.signal(signal.SIGINT, SignalHandler().signal_handler)
+signal.signal(signal.SIGTERM, SignalHandler().signal_handler)
+
 # signal.signal(signal.SIGINT, signal_handler)
 # signal.signal(signal.SIGTERM, signal_handler)
 
@@ -1114,11 +1117,6 @@ def main():
     """Do all the things."""
     config = ConfigHandler()
     args = vars(config.get_args())
-
-    signal_handler = SignalHandler(**args)
-
-    signal.signal(signal.SIGINT, signal_handler.signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler.signal_handler)
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         if args['location'] == 'local':
