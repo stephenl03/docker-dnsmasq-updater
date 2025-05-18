@@ -1,4 +1,7 @@
+import sys
 from types import SimpleNamespace
+
+import docker
 
 from docker_udm_dns.shared.logging import get_logger
 
