@@ -40,14 +40,19 @@ class HostsHandler():
             # strip the top level demain, if included
             try:
                 hostname = hostname[0:hostname.index('.' + self.params.domain)]
+                self.logger.debug("hostname stripped of top level domain: %s", hostname)
             except ValueError:
                 pass
 
             if not self.hosts.exists(comment=id_string):
-                host_list.update([hostname, hostname + '.' + self.params.domain])
+                host_and_vars_domain = f"{hostname}.{self.params.domain}"
+                self.logger.debug("host with domain from variables: %s", host_and_vars_domain)
+                host_list.update([hostname, host_and_vars_domain])
 
                 if self.params.prepend_www and not re.search('^www', hostname):
-                    host_list.update(['www.' + hostname + '.' + self.params.domain])
+                    www_host_and_vars_domain = f"www.{host_and_vars_domain}"
+                    self.logger.debug("host with www and domain from variables: %s", www_host_and_vars_domain)
+                    host_list.update([www_host_and_vars_domain])
                 hostname_dict[host_ip].update(host_list)
             else:
                 self.logger.debug('comment exists in Hosts: %s', id_string)

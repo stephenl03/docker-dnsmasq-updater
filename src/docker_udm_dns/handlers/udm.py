@@ -1,3 +1,4 @@
+import sys
 import requests
 from types import SimpleNamespace
 
@@ -26,20 +27,31 @@ class UDMHandler:
         self.logger.info("Queued UDM A record update.")
         self.delayed_put.reset()
 
-    def put_hostfile(self):
-        """Add A records to the UDM device."""
+    def get_udm_records(self) -> list:
         try:
             response = requests.get(self.udm_url, headers=self.headers, verify=False)
             response.raise_for_status()
             dns_records = response.json()  # Assuming records are stored as JSON
             self.logger.debug("DNS records retrieved: %s", str(dns_records))
+            return dns_records
         except Exception as e:
             self.logger.error("Error retrieving current UDM A records: %s", str(e))
+            raise
 
+    def get_temp_file_content(self) -> Any:
+        with open(self.temp_file.name, 'r', encoding="utf-8") as temp_file:
+            record = temp_file.read()
+            self.logger.debug("Temp file contents: %s", record)
+            return record
+
+    def put_hostfile(self) -> None:
+        """Add A records to the UDM device."""
+        dns_records = self.get_udm_records()
+        temp_file_content = self.get_temp_file_content()
         try:
             record = {
                 "record_type": "A",
-                "value": "",  # IP address
+                "value": self.params.ip,  # IP address
                 "key": "",  # Hostname
                 "enabled": True
             }
