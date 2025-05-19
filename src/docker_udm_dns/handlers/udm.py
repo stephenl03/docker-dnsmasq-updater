@@ -37,7 +37,7 @@ class UDMHandler:
             self.logger.error("Error retrieving current UDM A records: %s", str(e))
 
         try:
-            payload = {
+            record = {
                 "record_type": "A",
                 "value": "",  # IP address
                 "key": "",  # Hostname
@@ -45,9 +45,10 @@ class UDMHandler:
             }
             existing_record = [record for record in dns_records if record["key"] == ""]
             if existing_record:
-                payload.update(existing_record[0])
+                record.update(existing_record[0])
 
-            response = requests.post(self.udm_url, headers=self.headers, json=payload, verify=False)
+            self.logger.debug("Record, %s", str(record))
+            response = requests.post(self.udm_url, headers=self.headers, json=record, verify=False)
             if response.ok:
                 self.logger.info("Successfully added A record: %s", record['key'])
             else:
