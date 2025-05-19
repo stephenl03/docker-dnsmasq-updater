@@ -1,5 +1,5 @@
 import sys
-import request
+import requests
 from typing import Any
 from types import SimpleNamespace
 
