@@ -32,6 +32,7 @@ class UDMHandler:
             response = requests.get(self.udm_url, headers=self.headers, verify=False)
             response.raise_for_status()
             dns_records = response.json()  # Assuming records are stored as JSON
+            self.logger.debug("DNS records retrieved: %s", str(dns_records))
         except Exception as e:
             self.logger.error("Error retrieving current UDM A records: %s", str(e))
 
