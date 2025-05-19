@@ -1,3 +1,4 @@
+import re
 import signal
 
 import sys
@@ -107,7 +108,8 @@ class DockerHandler():
 
         try:
             containers = self.client.containers.list(
-                filters={"label": "dnsmasq.updater.enable", "status": "running"})
+                filters={"label": "dnsmasq.updater.enable", "status": "running"}
+            )
         except docker.errors.APIError as err:
             self.logger.warning('Could not scan running containers: %s', err)
             return
