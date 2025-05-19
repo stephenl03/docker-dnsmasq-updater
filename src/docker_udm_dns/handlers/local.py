@@ -1,9 +1,13 @@
+import subprocess
 from types import SimpleNamespace
 
 
 from docker_udm_dns.shared.logging import get_logger
 from docker_udm_dns.shared.resettable_timer import ResettableTimer
 
+
+BLOCK_START = '### docker dnsmasq updater start ###'
+BLOCK_END = '### docker dnsmasq updater end ###'
 
 class LocalHandler():
     """Handle writing of a local hosts file."""
@@ -42,4 +46,5 @@ class LocalHandler():
             subprocess.run(restart_cmd.split(), check=True)
         except subprocess.CalledProcessError:
             self.logger.error(
-                'CalledProcessError: Failed to execute restart command: %s', restart_cmd)
+                'CalledProcessError: Failed to execute restart command: %s', restart_cmd
+            )

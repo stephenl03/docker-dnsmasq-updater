@@ -55,8 +55,8 @@ from docker_udm_dns.handlers.signal import SignalHandler
 CONFIG_FILE = 'dnsmasq_updater.conf'
 CONFIG_PATHS = [os.path.dirname(os.path.realpath(__file__)), '/etc/', '/conf/']
 
-BLOCK_START = '### docker dnsmasq updater start ###'
-BLOCK_END = '### docker dnsmasq updater end ###'
+# BLOCK_START = '### docker dnsmasq updater start ###'
+# BLOCK_END = '### docker dnsmasq updater end ###'
 
 ## Logging
 # DEFAULT_LOG_LEVEL = logging.INFO
