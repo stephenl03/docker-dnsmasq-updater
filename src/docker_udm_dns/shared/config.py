@@ -20,7 +20,7 @@ class ConfigHandler():
         """Initialize default config, parse config file and command line args."""
         self.defaults = {
             'config_file': CONFIG_FILE,
-            'domain': 'docker',
+            'domain': None,
             'labels_from': None,
             'prepend_www': False,
             'docker_socket': 'unix://var/run/docker.sock',
